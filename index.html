@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Royal Wedding - Classic Vintage Greeting</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Vintage Suite -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cinzel:wght@400;600;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Special+Elite&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        parchment: {
+                            DEFAULT: '#F4EAE1',
+                            light: '#FBF7F2',
+                            dark: '#E2D3C1',
+                            border: '#C8B299'
+                        },
+                        burgundy: {
+                            DEFAULT: '#6B1D2F',
+                            light: '#8C2B40',
+                            dark: '#4A111E',
+                            deep: '#2D0A12'
+                        },
+                        vintageGold: {
+                            DEFAULT: '#C59B27',
+                            light: '#E5C158',
+                            dark: '#937013'
+                        },
+                        sepiaText: '#3B2F2F',
+                        walnut: '#2C1D11'
+                    },
+                    fontFamily: {
+                        cinzel: ['Cinzel', 'serif'],
+                        playfair: ['Playfair Display', 'serif'],
+                        script: ['Alex Brush', 'cursive'],
+                        typewriter: ['Special Elite', 'monospace'],
+                    },
+                    animation: {
+                        'spin-vinyl': 'spin 5s linear infinite',
+                        'float-gentle': 'float 5s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 2.5s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-10px) rotate(1.5deg)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: 0.8, filter: 'drop-shadow(0 0 5px rgba(197, 155, 39, 0.4))' },
+                            '50%': { opacity: 1, filter: 'drop-shadow(0 0 15px rgba(197, 155, 39, 0.8))' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar Vintage */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #E2D3C1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6B1D2F;
+            border-radius: 2px;
+            border: 2px solid #E2D3C1;
+        }
+
+        /* Vintage Kertas Perkamen Texture */
+        .parchment-bg {
+            background-color: #F4EAE1;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(251, 247, 242, 0.8), rgba(226, 211, 193, 0.6)),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+
+        /* Victorian Lace Border Pattern */
+        .lace-border {
+            border: 2px solid #C59B27;
+            box-shadow: inset 0 0 0 4px #F4EAE1, inset 0 0 0 6px #6B1D2F;
+        }
+
+        .vintage-card {
+            background: #FBF7F2;
+            border: 1px solid #C8B299;
+            box-shadow: 0 10px 30px -5px rgba(44, 29, 17, 0.15), 0 2px 6px rgba(44, 29, 17, 0.1);
+            position: relative;
+        }
+
+        /* Wax Seal Stempel Lilin */
+        .wax-seal {
+            background: radial-gradient(circle at 35% 35%, #8C2B40 0%, #6B1D2F 50%, #2D0A12 100%);
+            box-shadow: 0 8px 20px rgba(45, 10, 18, 0.5), inset 0 2px 5px rgba(255, 255, 255, 0.4), inset 0 -3px 5px rgba(0, 0, 0, 0.5);
+            border: 2px solid #C59B27;
+        }
+
+        /* Vintage Postmark Stamp Effect */
+        .postmark {
+            border: 2px dashed #8C2B40;
+            color: #8C2B40;
+            opacity: 0.75;
+            transform: rotate(-12deg);
+            font-family: 'Special Elite', monospace;
+            display: inline-block;
+            padding: 4px 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 4px;
+        }
+
+        /* Sepia Filter for Photos */
+        .sepia-frame img {
+            filter: sepia(0.35) contrast(1.05) brightness(0.95);
+            transition: all 0.5s ease;
+        }
+        .sepia-frame:hover img {
+            filter: sepia(0) contrast(1) brightness(1);
+            transform: scale(1.03);
+        }
+
+        /* Particle Overlay Canvas */
+        #dust-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 40;
+        }
+
+        /* Gramophone Vinyl Arm Animation */
+        .tonearm {
+            transform-origin: 15px 15px;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tonearm.playing {
+            transform: rotate(22deg);
+        }
+    </style>
+</head>
+<body class="parchment-bg text-sepiaText font-playfair antialiased overflow-x-hidden selection:bg-burgundy-light selection:text-parchment-light">
+
+    <!-- Vintage Dust Gold Particle Canvas -->
+    <canvas id="dust-canvas"></canvas>
+
+    <!-- Top Right Floating Vinyl Gramophone Player Control -->
+    <div class="fixed top-5 right-5 z-50 flex items-center gap-3">
+        <!-- Share Link Button -->
+        <button id="share-btn" title="Bagikan Ucapan" class="p-3 rounded-full bg-parchment-light border border-parchment-border text-burgundy shadow-lg hover:bg-parchment transition-all active:scale-95 flex items-center justify-center">
+            <i data-lucide="share-2" class="w-5 h-5"></i>
+        </button>
+
+        <!-- Gramophone Vinyl Quick Player Widget -->
+        <div id="gramophone-widget" class="relative group cursor-pointer p-2 rounded-full bg-walnut border-2 border-vintageGold shadow-2xl flex items-center justify-center" title="Putar Gramofon Vintage">
+            <!-- Vinyl Disc -->
+            <div id="vinyl-disc" class="w-10 h-10 rounded-full bg-black border-2 border-gray-800 flex items-center justify-center relative overflow-hidden transition-all">
+                <div class="w-3 h-3 rounded-full bg-vintageGold border border-black"></div>
+                <!-- Grooves simulation -->
+                <div class="absolute inset-0 rounded-full border border-white/10 m-1 pointer-events-none"></div>
+                <div class="absolute inset-0 rounded-full border border-white/10 m-2 pointer-events-none"></div>
+            </div>
+            <!-- Tonearm indicator icon -->
+            <i id="music-status-icon" data-lucide="disc" class="w-4 h-4 text-vintageGold absolute inset-0 m-auto pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></i>
+        </div>
+    </div>
+
+
+    <!-- COVER / ENVELOPE VINTAGE OPENER -->
+    <div id="envelope-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-walnut/90 backdrop-blur-md transition-opacity duration-1000 p-4">
+        <div class="text-center max-w-lg w-full flex flex-col items-center">
+            
+            <!-- Royal Header Badge -->
+            <div class="mb-6 animate-pulse-glow">
+                <p class="font-cinzel text-vintageGold-light tracking-[0.3em] text-xs uppercase mb-1">Undangan & Warkat Ucapan</p>
+                <div class="h-px bg-vintageGold w-32 mx-auto mb-3"></div>
+                <h1 class="font-script text-5xl md:text-6xl text-parchment-light">The Wedding Celebration</h1>
+            </div>
+
+            <!-- Envelope Card Vintage -->
+            <div id="envelope-card" class="relative w-full max-w-sm h-72 parchment-bg rounded-lg shadow-2xl lace-border flex flex-col items-center justify-center p-6 cursor-pointer transform transition-all duration-500 hover:scale-105 group">
+                
+                <!-- Vintage Botanical Line Art Background -->
+                <div class="absolute inset-0 opacity-15 pointer-events-none p-4 flex justify-between items-between">
+                    <i data-lucide="flower-2" class="w-12 h-12 text-burgundy"></i>
+                    <i data-lucide="flower-2" class="w-12 h-12 text-burgundy transform rotate-90"></i>
+                </div>
+
+                <!-- Postmark Stamp Top Right -->
+                <div class="absolute top-4 right-4 postmark text-[10px]">
+                    ROYAL MAIL<br>1926
+                </div>
+
+                <!-- Recipient Address Label -->
+                <div class="z-10 text-center my-auto">
+                    <p class="font-typewriter text-xs text-sepiaText/70 uppercase tracking-widest mb-1">Kepada Sahabat Istimewa:</p>
+                    <p id="couple-names-preview" class="font-cinzel font-bold text-2xl text-burgundy tracking-wider">ROMEO & JULIET</p>
+                    <p class="font-playfair italic text-xs text-sepiaText/80 mt-1">Di Tempat Kebahagiaan</p>
+                </div>
+
+                <!-- Wax Seal Cap Stempel Lilin Vintage -->
+                <div id="open-envelope-btn" class="wax-seal w-20 h-20 rounded-full flex flex-col items-center justify-center text-parchment-light cursor-pointer transition-transform duration-300 hover:scale-110 active:scale-95 shadow-2xl z-20 group-hover:rotate-6">
+                    <i data-lucide="crown" class="w-7 h-7 text-vintageGold-light"></i>
+                    <span class="font-cinzel text-[8px] font-bold tracking-widest text-vintageGold-light uppercase mt-0.5">BUKA</span>
+                </div>
+                
+                <span class="text-[11px] font-typewriter text-burgundy mt-4 tracking-wide group-hover:underline">Tekan Stempel Lilin Untuk Membuka Surat</span>
+            </div>
+
+            <p class="text-parchment-dark text-xs mt-6 font-playfair italic">Gunakan audio untuk menikmati lantunan musik Gramofon Vintage</p>
+        </div>
+    </div>
+
+
+    <!-- MAIN CONTENT PAGE -->
+    <div id="main-content" class="opacity-0 transition-opacity duration-1000">
+        
+        <!-- Hero Section Banner -->
+        <section class="min-h-screen relative flex items-center justify-center text-center px-4 py-24 parchment-bg">
+            <!-- Victorian Floral Frame SVG overlay -->
+            <div class="max-w-4xl mx-auto z-10 space-y-6 vintage-card p-8 sm:p-16 rounded-lg lace-border">
+                
+                <div class="flex items-center justify-center gap-3">
+                    <div class="h-px bg-vintageGold w-12 sm:w-20"></div>
+                    <span class="font-cinzel text-xs font-semibold uppercase tracking-[0.25em] text-burgundy">Happy Ever After</span>
+                    <div class="h-px bg-vintageGold w-12 sm:w-20"></div>
+                </div>
+
+                <h1 id="couple-names-main" class="font-script text-6xl sm:text-7xl md:text-8xl text-burgundy leading-tight">
+                    Romeo & Juliet
+                </h1>
+
+                <!-- Antique Ornament Divider -->
+                <div class="flex items-center justify-center gap-2 py-2 text-vintageGold">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    <span class="font-cinzel text-sm">❦</span>
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                </div>
+
+                <p class="font-playfair text-xl sm:text-2xl italic text-sepiaText max-w-2xl mx-auto leading-relaxed">
+                    "Dua hati yang tertulis dalam takdir klasik, menyatu dalam janji suci pernikahan abadi."
+                </p>
+
+                <!-- Gramophone Player Card Section -->
+                <div class="pt-6">
+                    <div class="inline-flex items-center gap-4 p-4 rounded-xl bg-parchment-dark/50 border border-parchment-border shadow-inner">
+                        <!-- Vinyl Player Illustration -->
+                        <div class="relative w-16 h-16 bg-walnut rounded-lg p-2 border border-vintageGold shadow-md flex items-center justify-center">
+                            <div id="hero-vinyl" class="w-12 h-12 rounded-full bg-black border-2 border-gray-800 flex items-center justify-center relative">
+                                <div class="w-4 h-4 rounded-full bg-burgundy border border-vintageGold"></div>
+                            </div>
+                        </div>
+                        <div class="text-left">
+                            <p class="font-cinzel text-xs text-burgundy font-bold uppercase tracking-wider">Musik Vintage Gramofon</p>
+                            <p id="song-title" class="font-typewriter text-xs text-sepiaText/80">Lover's Classic Waltz (1926)</p>
+                            <button id="hero-play-btn" class="mt-2 px-3 py-1 bg-burgundy hover:bg-burgundy-dark text-parchment-light font-cinzel text-[10px] tracking-widest rounded transition-colors flex items-center gap-1.5">
+                                <i data-lucide="play" class="w-3 h-3"></i> <span id="hero-play-text">PUTAR MUSIK</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#letter-section" class="inline-flex flex-col items-center gap-2 text-burgundy hover:text-burgundy-dark transition-colors pt-8">
+                    <span class="font-cinzel text-[10px] tracking-[0.2em] uppercase">Gulir Ke Warkat Surat</span>
+                    <i data-lucide="chevron-down" class="w-5 h-5 animate-bounce"></i>
+                </a>
+            </div>
+        </section>
+
+
+        <!-- Vintage Antique Pocket Watch Countdown -->
+        <section class="py-16 bg-walnut text-parchment-light border-y-2 border-vintageGold">
+            <div class="max-w-4xl mx-auto px-4 text-center">
+                <div class="inline-block p-2 rounded-full bg-vintageGold/20 border border-vintageGold mb-3">
+                    <i data-lucide="watch" class="w-6 h-6 text-vintageGold-light"></i>
+                </div>
+                <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-vintageGold-light tracking-wider">Hitung Mundur Kebahagiaan</h2>
+                <p class="font-playfair italic text-parchment-dark text-sm mt-1 mb-8">Menghitung setiap detik berharga menuju momen sakral</p>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+                    <div class="p-5 rounded-lg bg-burgundy-deep/80 border border-vintageGold/40 shadow-xl">
+                        <span id="timer-days" class="font-typewriter text-3xl md:text-4xl font-bold text-vintageGold-light block">00</span>
+                        <span class="font-cinzel text-[10px] uppercase tracking-widest text-parchment-dark mt-1 block">Hari</span>
+                    </div>
+                    <div class="p-5 rounded-lg bg-burgundy-deep/80 border border-vintageGold/40 shadow-xl">
+                        <span id="timer-hours" class="font-typewriter text-3xl md:text-4xl font-bold text-vintageGold-light block">00</span>
+                        <span class="font-cinzel text-[10px] uppercase tracking-widest text-parchment-dark mt-1 block">Jam</span>
+                    </div>
+                    <div class="p-5 rounded-lg bg-burgundy-deep/80 border border-vintageGold/40 shadow-xl">
+                        <span id="timer-minutes" class="font-typewriter text-3xl md:text-4xl font-bold text-vintageGold-light block">00</span>
+                        <span class="font-cinzel text-[10px] uppercase tracking-widest text-parchment-dark mt-1 block">Menit</span>
+                    </div>
+                    <div class="p-5 rounded-lg bg-burgundy-deep/80 border border-vintageGold/40 shadow-xl">
+                        <span id="timer-seconds" class="font-typewriter text-3xl md:text-4xl font-bold text-vintageGold-light block">00</span>
+                        <span class="font-cinzel text-[10px] uppercase tracking-widest text-parchment-dark mt-1 block">Detik</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Heartfelt Vintage Letter Section -->
+        <section id="letter-section" class="py-24 px-4 max-w-4xl mx-auto">
+            <div class="vintage-card rounded-lg p-8 md:p-16 lace-border relative overflow-hidden">
+                
+                <!-- Postmark Stamp Overlay -->
+                <div class="absolute top-6 right-6 postmark hidden sm:block">
+                    PERMANENT LOVE<br>OFFICIAL SEAL
+                </div>
+
+                <div class="relative z-10 text-center space-y-8">
+                    <i data-lucide="scroll-text" class="w-12 h-12 text-vintageGold mx-auto"></i>
+
+                    <h2 class="font-script text-5xl md:text-6xl text-burgundy">Warkat Doa & Restu</h2>
+
+                    <div class="font-playfair text-lg md:text-2xl text-sepiaText leading-relaxed space-y-6 italic text-justify sm:text-center">
+                        <p>
+                            Untuk sahabat terkasih, dalam hembusan waktu yang membawa kabar bahagia ini, tiada kata yang sanggup melukiskan rasa haru dan sukacita saat menyaksikan dua jiwa berikrar dalam ikatan pernikahan yang suci.
+                        </p>
+                        <p>
+                            Semoga mahligai rumah tangga yang kalian bina hari ini sentiasa dinaungi ketenangan, kehangatan kasih yang tak lapuk oleh waktu, serta keberkahan yang terus mengalir indah bagaikan simfoni klasik selamanya.
+                        </p>
+                        <p class="font-typewriter font-normal text-sm text-burgundy border-y border-parchment-border py-4">
+                            "Cinta sejati bukan tentang menemukan seseorang yang sempurna, melainkan melihat ketidaksempurnaan dengan cara yang paling sempurna."
+                        </p>
+                    </div>
+
+                    <div class="pt-6">
+                        <p class="font-script text-3xl text-burgundy">Dengan Penghormatan & Doa Tulus,</p>
+                        <p id="sender-name" class="font-cinzel font-bold text-lg text-sepiaText uppercase tracking-widest mt-1">Sahabat Terbaikmu</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Vintage Sepia Photo Gallery -->
+        <section class="py-20 bg-parchment-dark/30 px-4 border-t border-parchment-border">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-16 space-y-2">
+                    <span class="font-cinzel text-xs font-bold uppercase tracking-[0.25em] text-burgundy">Galeri Memori</span>
+                    <h2 class="font-serif text-4xl md:text-5xl font-bold text-sepiaText">Kenangan Dalam Bingkai Film</h2>
+                    <p class="font-playfair italic text-gray-600 text-sm">Klik pada foto untuk memperbesar dengan tampilan vintage</p>
+                </div>
+
+                <!-- Gallery Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
+                    <!-- Photo 1 -->
+                    <div class="vintage-card p-4 rounded sepia-frame cursor-pointer transform -rotate-1 hover:rotate-0 transition-transform" onclick="openLightbox('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80', 'Momen Manis Pertama')">
+                        <div class="aspect-square overflow-hidden bg-walnut mb-3 border border-parchment-border">
+                            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" alt="Foto 1" class="w-full h-full object-cover" loading="lazy" onerror="this.src='https://placehold.co/600x600/2c1d11/c59b27?text=Vintage+Memory+1'">
+                        </div>
+                        <p class="font-typewriter text-center text-xs text-sepiaText">Figur I: Awal Senyuman</p>
+                    </div>
+
+                    <!-- Photo 2 -->
+                    <div class="vintage-card p-4 rounded sepia-frame cursor-pointer transform rotate-2 hover:rotate-0 transition-transform" onclick="openLightbox('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80', 'Janji Abadi')">
+                        <div class="aspect-square overflow-hidden bg-walnut mb-3 border border-parchment-border">
+                            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80" alt="Foto 2" class="w-full h-full object-cover" loading="lazy" onerror="this.src='https://placehold.co/600x600/2c1d11/c59b27?text=Vintage+Memory+2'">
+                        </div>
+                        <p class="font-typewriter text-center text-xs text-sepiaText">Figur II: Ikrar Suci</p>
+                    </div>
+
+                    <!-- Photo 3 -->
+                    <div class="vintage-card p-4 rounded sepia-frame cursor-pointer transform -rotate-2 hover:rotate-0 transition-transform" onclick="openLightbox('https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80', 'Langkah Bersama')">
+                        <div class="aspect-square overflow-hidden bg-walnut mb-3 border border-parchment-border">
+                            <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80" alt="Foto 3" class="w-full h-full object-cover" loading="lazy" onerror="this.src='https://placehold.co/600x600/2c1d11/c59b27?text=Vintage+Memory+3'">
+                        </div>
+                        <p class="font-typewriter text-center text-xs text-sepiaText">Figur III: Kebersamaan</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Vintage Diary Virtual Guestbook -->
+        <section class="py-24 px-4 max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="font-cinzel text-xs font-bold uppercase tracking-[0.25em] text-burgundy">Buku Tamu Diary</span>
+                <h2 class="font-serif text-4xl font-bold text-sepiaText mt-1">Goresan Doa Restu</h2>
+                <p class="font-playfair italic text-gray-600 text-sm mt-1">Tuliskan pesan doa hangat Anda dalam lembaran buku harian tua ini</p>
+            </div>
+
+            <div class="grid md:grid-cols-12 gap-8 items-start">
+                <!-- Input Form -->
+                <div class="md:col-span-5 vintage-card p-6 rounded lace-border">
+                    <form id="wishes-form" class="space-y-4">
+                        <div>
+                            <label class="block font-cinzel text-xs font-bold text-burgundy uppercase mb-1">Nama Pengirim</label>
+                            <input type="text" id="guest-name" required placeholder="Contoh: Raden Mas & Partner" class="w-full px-4 py-2.5 bg-parchment border border-parchment-border rounded font-typewriter text-xs focus:outline-none focus:ring-1 focus:ring-burgundy">
+                        </div>
+                        <div>
+                            <label class="block font-cinzel text-xs font-bold text-burgundy uppercase mb-1">Pesan & Doa</label>
+                            <textarea id="guest-message" required rows="4" placeholder="Tuliskan harapan indahmu di sini..." class="w-full px-4 py-2.5 bg-parchment border border-parchment-border rounded font-typewriter text-xs focus:outline-none focus:ring-1 focus:ring-burgundy resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-burgundy hover:bg-burgundy-dark text-parchment-light font-cinzel text-xs tracking-widest font-bold rounded shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
+                            <i data-lucide="feather" class="w-4 h-4 text-vintageGold"></i> TINTAI DOA RESTU
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Wishes Feed -->
+                <div class="md:col-span-7">
+                    <div id="wishes-list" class="space-y-4 max-h-[440px] overflow-y-auto pr-2">
+                        <!-- Content populated via JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Footer -->
+        <footer class="py-12 text-center bg-walnut text-parchment-light border-t-2 border-vintageGold">
+            <div class="max-w-md mx-auto px-4 space-y-3">
+                <i data-lucide="crown" class="w-8 h-8 text-vintageGold mx-auto"></i>
+                <h3 class="font-script text-4xl text-vintageGold-light">Terima Kasih</h3>
+                <p class="font-playfair text-xs italic text-parchment-dark">
+                    Dirancang khusus dengan tema Vintage Classic untuk merayakan hari kebahagiaan sejati.
+                </p>
+                <p class="font-cinzel text-[10px] text-vintageGold/70 tracking-widest pt-4 uppercase">&copy; Royal Vintage Greeting Card</p>
+            </div>
+        </footer>
+
+    </div>
+
+
+    <!-- Vintage Lightbox Modal -->
+    <div id="lightbox-modal" class="fixed inset-0 z-50 bg-walnut/95 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4" onclick="closeLightbox()">
+        <div class="relative max-w-3xl w-full text-center p-4 vintage-card lace-border" onclick="event.stopPropagation()">
+            <img id="lightbox-img" src="" alt="Photo Full" class="max-h-[75vh] mx-auto rounded shadow-2xl object-contain border border-parchment-border">
+            <p id="lightbox-caption" class="font-typewriter text-sm text-burgundy mt-4"></p>
+            <button onclick="closeLightbox()" class="absolute -top-10 right-0 text-parchment-light hover:text-vintageGold">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        /* Initialize Lucide Icons */
+        lucide.createIcons();
+
+        /* Audio Player Web Audio API Synth Engine (Classic Romantic Waltz) */
+        let audioCtx = null;
+        let isPlaying = false;
+        let audioTimer = null;
+
+        function startGramophoneAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            isPlaying = true;
+            updateGramophoneUI(true);
+
+            // Vintage Acoustic Waltz Melody Notes (G Major / E Minor Vintage scale)
+            const waltzNotes = [196.00, 246.94, 293.66, 392.00, 329.63, 293.66, 246.94, 196.00];
+            let step = 0;
+
+            audioTimer = setInterval(() => {
+                if (!isPlaying) return;
+
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+
+                    // Warm Triangle wave for vintage organ/accordion acoustic feel
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(waltzNotes[step % waltzNotes.length], audioCtx.currentTime);
+
+                    gain.gain.setValueAtTime(0.01, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.07, audioCtx.currentTime + 0.15);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.6);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 1.8);
+
+                    step++;
+                } catch(e) {
+                    console.log('Gramophone sound...', e);
+                }
+            }, 750);
+        }
+
+        function stopGramophoneAudio() {
+            isPlaying = false;
+            if (audioTimer) clearInterval(audioTimer);
+            updateGramophoneUI(false);
+        }
+
+        function updateGramophoneUI(playing) {
+            const vinylDisc = document.getElementById('vinyl-disc');
+            const heroVinyl = document.getElementById('hero-vinyl');
+            const playText = document.getElementById('hero-play-text');
+
+            if (playing) {
+                vinylDisc.classList.add('animate-spin-vinyl');
+                heroVinyl.classList.add('animate-spin-vinyl');
+                if (playText) playText.innerText = 'HENTIKAN';
+            } else {
+                vinylDisc.classList.remove('animate-spin-vinyl');
+                heroVinyl.classList.remove('animate-spin-vinyl');
+                if (playText) playText.innerText = 'PUTAR MUSIK';
+            }
+        }
+
+        document.getElementById('gramophone-widget').addEventListener('click', () => {
+            if (isPlaying) stopGramophoneAudio();
+            else startGramophoneAudio();
+        });
+
+        document.getElementById('hero-play-btn').addEventListener('click', () => {
+            if (isPlaying) stopGramophoneAudio();
+            else startGramophoneAudio();
+        });
+
+
+        /* Envelope Wax Seal Unfold Interaction */
+        document.getElementById('envelope-card').addEventListener('click', () => {
+            const overlay = document.getElementById('envelope-overlay');
+            const mainContent = document.getElementById('main-content');
+
+            // Trigger Vintage Gold Confetti
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#C59B27', '#6B1D2F', '#F4EAE1', '#2C1D11']
+            });
+
+            // Start Audio
+            startGramophoneAudio();
+
+            // Fade Out Envelope
+            overlay.classList.add('opacity-0');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                mainContent.classList.remove('opacity-0');
+            }, 1000);
+        });
+
+
+        /* Vintage Gold Dust Particle Canvas */
+        const canvas = document.getElementById('dust-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class GoldDustParticle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2.5 + 0.5;
+                this.speedY = -(Math.random() * 0.5 + 0.2);
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.opacity = Math.random() * 0.7 + 0.2;
+                this.color = ['#C59B27', '#E5C158', '#C8B299'][Math.floor(Math.random() * 3)];
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+
+                if (this.y < -10) {
+                    this.y = canvas.height + 10;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 45; i++) {
+                particles.push(new GoldDustParticle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        initParticles();
+        animateParticles();
+
+
+        /* Countdown Timer */
+        const weddingDate = new Date();
+        weddingDate.setDate(weddingDate.getDate() + 14);
+
+        function updateTimer() {
+            const now = new Date().getTime();
+            const distance = weddingDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('timer-days').innerText = String(days > 0 ? days : 0).padStart(2, '0');
+            document.getElementById('timer-hours').innerText = String(hours > 0 ? hours : 0).padStart(2, '0');
+            document.getElementById('timer-minutes').innerText = String(minutes > 0 ? minutes : 0).padStart(2, '0');
+            document.getElementById('timer-seconds').innerText = String(seconds > 0 ? seconds : 0).padStart(2, '0');
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+
+        /* Virtual Guestbook Diary LocalStorage Logic */
+        const defaultWishes = [
+            { name: 'Siti & Budi', message: 'Selamat menempuh hidup baru sahabatku! Semoga mahligai rumah tangga kalian dilimpahi berkah dan cinta abadi.' },
+            { name: 'Keluarga Besar Pratama', message: 'Doa terbaik untuk kedua mempelai. Semoga bahagia selamanya hingga anak cucu.' }
+        ];
+
+        function getWishes() {
+            const saved = localStorage.getItem('vintage_wedding_wishes');
+            return saved ? JSON.parse(saved) : defaultWishes;
+        }
+
+        function renderWishes() {
+            const wishesList = document.getElementById('wishes-list');
+            const wishes = getWishes();
+
+            wishesList.innerHTML = wishes.map(w => `
+                <div class="vintage-card p-4 rounded border border-parchment-border">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-cinzel font-bold text-burgundy text-xs">${escapeHtml(w.name)}</span>
+                        <span class="postmark text-[8px] py-0 px-1">STAMPED</span>
+                    </div>
+                    <p class="font-typewriter text-sepiaText text-xs leading-relaxed">${escapeHtml(w.message)}</p>
+                </div>
+            `).join('');
+            
+            lucide.createIcons();
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>"']/g, function(m) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                }[m];
+            });
+        }
+
+        document.getElementById('wishes-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nameInput = document.getElementById('guest-name');
+            const msgInput = document.getElementById('guest-message');
+
+            const newWish = {
+                name: nameInput.value.trim(),
+                message: msgInput.value.trim()
+            };
+
+            const wishes = getWishes();
+            wishes.unshift(newWish);
+            localStorage.setItem('vintage_wedding_wishes', JSON.stringify(wishes));
+
+            nameInput.value = '';
+            msgInput.value = '';
+
+            renderWishes();
+
+            confetti({
+                particleCount: 30,
+                spread: 40,
+                origin: { y: 0.8 },
+                colors: ['#C59B27', '#6B1D2F']
+            });
+        });
+
+        renderWishes();
+
+
+        /* Share Link Button */
+        document.getElementById('share-btn').addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'The Royal Vintage Wedding Greeting',
+                    text: 'Ucapan Pernikahan Vintage Klasik untuk Sahabat Terkasih',
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                document.execCommand('copy');
+                alert('Tautan ucapan berhasil disalin ke papan klip!');
+            }
+        });
+
+
+        /* Lightbox Functions */
+        function openLightbox(src, caption) {
+            const modal = document.getElementById('lightbox-modal');
+            const img = document.getElementById('lightbox-img');
+            const cap = document.getElementById('lightbox-caption');
+
+            img.src = src;
+            cap.innerText = caption;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('lightbox-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+    </script>
+</body>
+</html>
